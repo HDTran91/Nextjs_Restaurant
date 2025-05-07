@@ -9,6 +9,6 @@ Add, edit, delete products
 
 View products
 
-Basic SEO
+Basic SEOstage
 
 Authentication management
