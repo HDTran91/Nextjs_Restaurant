@@ -10,7 +10,7 @@ export default function header() {
                <Link href={'/login'}> Login</Link>
             </li>
             <li>
-               <Link href={'/Register'}> Register</Link>
+               <Link href={'/register'}> Register</Link>
             </li>
         </ul>
         <ModeToggle />
