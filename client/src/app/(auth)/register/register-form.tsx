@@ -13,7 +13,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema"
-import envConfig from "@/config"
+import { toast } from "sonner"
+import authApiRequest from "@/apiRequest/auth"
+import { LoginResponse } from "@/app/(auth)/login/login-form"
 
 
 export default function RegisterForm() {
@@ -29,14 +31,26 @@ export default function RegisterForm() {
 
     // 2. Define a submit handler.
   async  function onSubmit(values: RegisterBodyType) {
-      const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/register`, {
-        body: JSON.stringify(values),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST"
-        }).then((res) => res.json())
-        console.log(result)
+      try {
+        const result = await authApiRequest.register(values) as unknown as LoginResponse
+        toast.success(result.payload.message)
+        await authApiRequest.auth({sessionToken: result.payload.data.token})
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch(error: any) {
+      const errors = error.payload.errors as {field:string, message: string}[]
+      const status = error.status as number
+      if(status ===422) {
+        errors.forEach((error) => {
+          form.setError(error.field as 'email' | 'password', {
+            type: "server",
+            message: error.message,
+          })
+        })
+      }
+      else
+      toast.error(error.payload.message)
+    }
       }
     return <div>
       <Form {...form}>

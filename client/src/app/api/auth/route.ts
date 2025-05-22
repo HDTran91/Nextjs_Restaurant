@@ -1,13 +1,13 @@
 
 export async function POST(request: Request) {
     const res = await request.json()
-    const sessionToken = res.payload?.data?.token
+    const sessionToken = res.sessionToken as string
     if (!sessionToken) {
         return Response.json({message: "No session token found"}, {status: 401})}
-    return Response.json( res.payload ,{
+    return Response.json( res,{
     status: 200,
     headers: {
-      "Set-Cookie": `sessionToken =${sessionToken};Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
+      "Set-Cookie": `sessionToken =${sessionToken};Path=/; HttpOnly`,
     }
    })
 }
