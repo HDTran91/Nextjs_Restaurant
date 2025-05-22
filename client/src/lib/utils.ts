@@ -26,3 +26,7 @@ export const handleErrorApi = ({error, setError}: {
     toast.error(error?.payload?.message ?? 'unidentified error')
   }
 }
+
+export const normalizePath = (path: string) => {
+  return path.startsWith('/') ? path.slice(1) : path
+}
