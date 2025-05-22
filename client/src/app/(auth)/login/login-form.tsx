@@ -17,6 +17,11 @@ import { LoginBodyType, LoginBody } from "@/schemaValidations/auth.schema"
 import { toast } from 'sonner'
 
 import authApiRequest from "@/apiRequest/auth"
+import { handleErrorApi } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+
+
 
 
 
@@ -34,6 +39,8 @@ export type LoginResponse = {
 };
 
 export default function LoginForm() {
+  const [loading, setLoading] = useState(false)
+    const router = useRouter()
     const form = useForm<LoginBodyType>({
       resolver: zodResolver(LoginBody),
       defaultValues: {
@@ -44,29 +51,24 @@ export default function LoginForm() {
 
     // 2. Define a submit handler.
   async  function onSubmit(values: LoginBodyType) {
+    if (loading) return
+    setLoading(true)
     try {
         const result = await authApiRequest.login(values) as unknown as LoginResponse
         toast.success(result.payload.message)
-        console.log("result Gacon:", result)
         await authApiRequest.auth({sessionToken: result.payload.data.token})
+        router.push('/me')
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {
-      const errors = error.payload.errors as {field:string, message: string}[]
-      const status = error.status as number
-      if(status ===422) {
-        errors.forEach((error) => {
-          form.setError(error.field as 'email' | 'password', {
-            type: "server",
-            message: error.message,
-          })
-        })
-      }
-      else
-      toast.error(error.payload.message)
+      handleErrorApi ({
+        error,
+        setError: form.setError,
+      })
+    }finally {
+      setLoading(false)
     }
   }
-
     return <div>
       <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}
