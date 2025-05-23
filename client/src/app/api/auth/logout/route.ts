@@ -4,6 +4,20 @@ import { HttpError } from "@/lib/http"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: Request) {
+    const res= await request.json()
+    const force = res.force as boolean | undefined
+    if (force) {
+        return Response.json({
+            message: 'Force Logout successful'
+
+        }, {
+            status: 200,
+            headers: {
+                //delete the cookie sessionToken
+                'set-cookie': `sessionToken=; Path=/; HttpOnly; Max-Age=0`,
+            }
+        })
+    }
     const cookieStore = await cookies()
     const sessionToken =  cookieStore.get("sessionToken")
     if (!sessionToken) {
