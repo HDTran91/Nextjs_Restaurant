@@ -3,13 +3,14 @@ import React from 'react'
 import { cookies } from 'next/headers'
 // import Profile from './profile'
 import accountApiRequest from '@/apiRequest/account'
-import { LoginResponse } from '@/app/(auth)/login/login-form'
+
+import { AccountResType } from '@/schemaValidations/account.schema'
 
 
 export default async function MeProfile() {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get('sessionToken')
-    const result = await accountApiRequest.me(sessionToken?.value as string ?? "") as unknown as LoginResponse
+    const result = await accountApiRequest.me(sessionToken?.value as string ?? "") as AccountResType
   return (
     <div>
         <h1>Profile</h1>

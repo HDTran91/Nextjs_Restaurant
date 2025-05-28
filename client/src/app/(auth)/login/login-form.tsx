@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { LoginBodyType, LoginBody } from "@/schemaValidations/auth.schema"
+import { LoginBodyType, LoginBody, LoginResType} from "@/schemaValidations/auth.schema"
 // import envConfig from "@/config"
 import { toast } from 'sonner'
 
@@ -21,22 +21,6 @@ import { handleErrorApi } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-
-
-
-
-export type LoginResponse = {
-  status: number;
-  payload: {
-    message: string;
-    data: {
-      token: string;
-      id: number;
-      name: string;
-      email: string;
-    };
-  };
-};
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false)
@@ -54,10 +38,12 @@ export default function LoginForm() {
     if (loading) return
     setLoading(true)
     try {
-        const result = await authApiRequest.login(values) as unknown as LoginResponse
+        const result = await authApiRequest.login(values) as LoginResType
         toast.success(result.payload.message)
-        await authApiRequest.auth({sessionToken: result.payload.data.token})
+
+        await authApiRequest.auth({sessionToken: result.payload.data.token, expiresAt: result.payload.data.expiresAt})
         router.push('/me')
+
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {

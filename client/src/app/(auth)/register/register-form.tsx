@@ -12,10 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema"
+import {RegisterBody, RegisterBodyType, RegisterResType } from "@/schemaValidations/auth.schema"
 import { toast } from "sonner"
 import authApiRequest from "@/apiRequest/auth"
-import { LoginResponse } from "@/app/(auth)/login/login-form"
 import { useRouter } from "next/navigation"
 import { handleErrorApi } from "@/lib/utils"
 import { useState } from "react"
@@ -39,9 +38,9 @@ export default function RegisterForm() {
     if (loading) return
     setLoading(true)
       try {
-        const result = await authApiRequest.register(values) as unknown as LoginResponse
+        const result = await authApiRequest.register(values) as RegisterResType
         toast.success(result.payload.message)
-        await authApiRequest.auth({sessionToken: result.payload.data.token})
+        await authApiRequest.auth({sessionToken: result.payload.data.token, expiresAt: result.payload.data.expiresAt})
         router.push('/me')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {

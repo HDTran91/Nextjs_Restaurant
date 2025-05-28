@@ -21,17 +21,22 @@ export const RegisterBody = z
 export type RegisterBodyType = z.TypeOf<typeof RegisterBody>
 
 export const RegisterRes = z.object({
-  data: z.object({
-    token: z.string(),
-    expiresAt: z.string(),
-    account: z.object({
-      id: z.number(),
-      name: z.string(),
-      email: z.string()
-    })
+  status: z.number(),
+  payload: z.object({
+    message: z.string(),
+    data: z.object({
+      token: z.string(),
+      expiresAt: z.string(),
+      account: z.object({
+        id: z.number(),
+        name: z.string(),
+        email: z.string(),
+      }),
+    }),
   }),
-  message: z.string()
 })
+
+
 
 export type RegisterResType = z.TypeOf<typeof RegisterRes>
 
@@ -53,3 +58,17 @@ export type SlideSessionBodyType = z.TypeOf<typeof SlideSessionBody>
 export const SlideSessionRes = RegisterRes
 
 export type SlideSessionResType = z.TypeOf<typeof SlideSessionRes>
+
+
+export const anotherType = z.object({
+  message: z.string(),
+  data: z.object({
+    token: z.string(),
+    expiresAt: z.string(),
+    account: z.object({
+      id: z.number(),
+      name: z.string(),
+      email: z.string(),
+    }),
+  }),
+})

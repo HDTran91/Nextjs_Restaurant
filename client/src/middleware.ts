@@ -8,7 +8,6 @@ const authPath = ['/login', '/register']
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl
   const sessionToken = request.cookies.get('sessionToken')?.value
-  console.log('sessionToken:', sessionToken)
   //check private path
   if (privatePath.some((path) => pathname.pathname.startsWith(path)) && !sessionToken) {
     //redirect to login page
