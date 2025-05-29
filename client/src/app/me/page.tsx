@@ -5,6 +5,8 @@ import { cookies } from 'next/headers'
 import accountApiRequest from '@/apiRequest/account'
 
 import { AccountResType } from '@/schemaValidations/account.schema'
+import ProfileForm from '@/app/me/profile-form'
+
 
 
 export default async function MeProfile() {
@@ -14,10 +16,7 @@ export default async function MeProfile() {
   return (
     <div>
         <h1>Profile</h1>
-        <div>
-            Hello {result.payload.data.name}
-        </div>
-        {/* <Profile /> */}
+        <ProfileForm profile={result.payload.data} />
     </div>
   )
 }
