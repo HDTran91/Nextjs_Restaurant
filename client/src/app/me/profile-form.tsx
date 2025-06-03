@@ -41,6 +41,7 @@ export default function ProfileForm({
     setLoading(true)
     try {
         const result = await accountApiRequest.updateMe(values)
+        console.log("result",result)
         toast.success(result.payload.message)
         route.refresh() // Refresh the page to reflect changes
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

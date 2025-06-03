@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import envConfig from "@/config"
 import { normalizePath } from "@/lib/utils"
@@ -71,11 +72,21 @@ class SessionToken {
 export const clientSessionToken = new SessionToken()
 let clientLogoutRequest: null | Promise<any> = null
 const request = async <Response> (method: 'GET' | 'POST' | 'PUT' | 'DELETE', url: string, options?:CustomOptions|undefined) => {
-    const body = options?.body ? JSON.stringify(options.body) : undefined
-    const baseHeaders = {
+    const body = options?.body ?
+    options.body instanceof FormData
+        ?options.body
+        :JSON.stringify(options.body)
+        : undefined
+
+    const baseHeaders = options?.body instanceof FormData ? {
+        Authorization: clientSessionToken.value
+        ? `Bearer ${clientSessionToken.value}`
+        : '',
+    }: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': clientSessionToken.value ? `Bearer ${clientSessionToken.value}` : '',
+        'Authorization': clientSessionToken.value
+        ? `Bearer ${clientSessionToken.value}`
+        : '',
     }
     // if base url is undefined, use envConfig.NEXT_PUBLIC_API_ENDPOINT
     const baseUrl = options?.baseUrl === undefined
@@ -88,7 +99,7 @@ const request = async <Response> (method: 'GET' | 'POST' | 'PUT' | 'DELETE', url
         headers: {
             ...baseHeaders,
             ...options?.headers,
-        },
+        } as any,
         body,
         method,
     })
@@ -111,7 +122,7 @@ const request = async <Response> (method: 'GET' | 'POST' | 'PUT' | 'DELETE', url
                 body: JSON.stringify({force: true}),
                 headers: {
                     ...baseHeaders
-                }
+                } as any
             });
             await clientLogoutRequest
             clientSessionToken.value = ''
@@ -130,8 +141,11 @@ const request = async <Response> (method: 'GET' | 'POST' | 'PUT' | 'DELETE', url
     if (typeof window !== 'undefined') {
         if (['auth/login', '/auth/register'].some((item)=> item === normalizePath(url))) {
             console.log("Payload response:", payload)
-            clientSessionToken.value = (payload as LoginResType)?.payload?.data?.token
-            clientSessionToken.expiresAt = (payload as LoginResType)?.payload?.data?.expiresAt
+            // @ts-ignore
+            clientSessionToken.value = (payload as LoginResType)?.data?.token
+            // @ts-expect-error
+            clientSessionToken.expiresAt = (payload as LoginResType)?.data?.expiresAt
+            console.log("Client session token set:", clientSessionToken.value, clientSessionToken.expiresAt)
         }
         else if ('auth/logout' === normalizePath(url)) {
             clientSessionToken.value = ''
