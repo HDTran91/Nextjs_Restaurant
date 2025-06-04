@@ -1,6 +1,7 @@
 import productApiRequest from '@/apiRequest/product'
 import { Button } from '@/components/ui/button';
 import Image from 'next/image'
+import Link from 'next/link';
 
 
 type Product = {
@@ -17,8 +18,14 @@ export default async function ProductListPage() {
   const productList: Product[] = payload.data
   console.log('productList', productList)
   return (
-    <div>
+    <div className= 'space-y-3'>
         <h1>Product List</h1>
+        <Link href={'/products/add'}>
+        <Button variant ='secondary'>
+           Add Product
+        </Button>
+
+        </Link>
         <div className='space-y-5'>
             {productList.map((product: Product) => (
             <div key={product.id} className='flex space-x-4'>
@@ -32,8 +39,11 @@ export default async function ProductListPage() {
                 <h3>{product.name}</h3>
                 <h3>{product.price}</h3>
                 <div className="flex space-x-2">
+                  <Link href= {`/products/${product.id}`}>
                   <Button variant='outline'>Edit</Button>
                   <Button variant="destructive">Delete</Button>
+                  </Link>
+
                 </div>
             </div>
 

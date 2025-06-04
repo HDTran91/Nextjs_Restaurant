@@ -17,7 +17,7 @@ export default function header() {
                <ButtonLogout />
             </li>
             <li>
-               <Link href={'/products/add'}> Add Product</Link>
+               <Link href={'/products'}>Product</Link>
             </li>
         </ul>
         <ModeToggle />
