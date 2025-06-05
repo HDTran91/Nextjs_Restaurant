@@ -1,14 +1,32 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 import productApiRequest from '@/apiRequest/product'
+import DeleteProduct from '@/app/products/_components/delete-product';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image'
 import Link from 'next/link';
 
 
 type Product = {
-  id: string | number;
-  name: string;
-  image: string;
-  price: number;
+        name: string;
+        price: number;
+        description: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+};
+
+type WrappedProduct = {
+  message: string;
+    data: {
+        name: string;
+        price: number;
+        description: string;
+        image: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+    };
 };
 
 export default async function ProductListPage() {
@@ -17,6 +35,7 @@ export default async function ProductListPage() {
   const {payload} = await productApiRequest.getList()
   const productList: Product[] = payload.data
   console.log('productList', productList)
+
   return (
     <div className= 'space-y-3'>
         <h1>Product List</h1>
@@ -38,11 +57,12 @@ export default async function ProductListPage() {
                 />
                 <h3>{product.name}</h3>
                 <h3>{product.price}</h3>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 items-start">
                   <Link href= {`/products/${product.id}`}>
                   <Button variant='outline'>Edit</Button>
-                  <Button variant="destructive">Delete</Button>
                   </Link>
+
+                  <DeleteProduct product={product as unknown as WrappedProduct } />
 
                 </div>
             </div>

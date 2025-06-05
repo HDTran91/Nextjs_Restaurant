@@ -11,7 +11,8 @@ const productApiRequest = {
     uploadImage: (body: FormData) => http.post<{
         message: string;
         data: string
-    }>("/media/upload", body)
+    }>("/media/upload", body),
+    delete: (id: number) => http.delete(`/products/${id}`),
 }
 
 export default productApiRequest;

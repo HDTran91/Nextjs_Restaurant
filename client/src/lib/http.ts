@@ -165,8 +165,8 @@ const http = {
     put<Response>(url: string, body: any, options?: Omit<CustomOptions,'body'> |undefined) {
         return request('PUT', url, { ...options, body }) as Promise<Response>
     },
-    delete<Response>(url: string,body: any, options?: Omit<CustomOptions,'body'> |undefined) {
-        return request('DELETE', url, { ...options, body }) as Promise<Response>
+    delete<Response>(url: string, options?: Omit<CustomOptions,'body'> |undefined) {
+        return request('DELETE', url, { ...options}) as Promise<Response>
     }
 }
 
