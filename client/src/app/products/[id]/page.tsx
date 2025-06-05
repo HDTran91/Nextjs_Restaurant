@@ -1,20 +1,30 @@
 import productApiRequest from '@/apiRequest/product'
-import React from 'react'
+import ProductAddForm from '@/app/products/_components/product-add-form'
+import React, { cache } from 'react'
 
-export default async function ProductEdit( {params} : {params: {id: string}}) {
+const getDetail = cache(productApiRequest.getDetail)
 
-    let product = null
-    try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+type Props = {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function ProductEdit(props: Props) {
+  const params = await props.params;
+  let product = null
+  try {
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    const {payload} = await productApiRequest.getDetail(Number(params.id))
+    const { payload } = await getDetail(Number(params.id))
     product = payload.data
-    }
-    catch (error) {}
-    return (
+  } catch (error) {
+    console.log(error)
+  }
+
+  return (
     <div>
-        {!product && <div> Product is unfound</div>}
-        {product && <div> {product.name}</div>}
+      {!product && <div>Không tìm thấy sản phẩm</div>}
+      {product && <ProductAddForm product={product} />}
     </div>
   )
 }
