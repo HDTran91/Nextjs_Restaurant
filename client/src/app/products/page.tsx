@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
+
 import productApiRequest from '@/apiRequest/product'
 import DeleteProduct from '@/app/products/_components/delete-product';
 import { Button } from '@/components/ui/button';
@@ -34,8 +34,6 @@ export default async function ProductListPage() {
   // @ts-expect-error
   const {payload} = await productApiRequest.getList()
   const productList: Product[] = payload.data
-  console.log('productList', productList)
-
   return (
     <div className= 'space-y-3'>
         <h1>Product List</h1>

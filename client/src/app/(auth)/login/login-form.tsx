@@ -43,6 +43,7 @@ export default function LoginForm() {
 
         await authApiRequest.auth({sessionToken: result.payload.data.token, expiresAt: result.payload.data.expiresAt})
         router.push('/me')
+        router.refresh()
 
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
