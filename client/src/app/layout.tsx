@@ -4,9 +4,12 @@ import { ThemeProvider } from "@/components/theme.provider";
 import { Inter} from "next/font/google";
 import Header from "@/components/header";
 import { Toaster } from 'sonner'
-import AppProvider from "@/app/app-provider";
 import { cookies } from "next/headers";
 import SlideSession from "@/components/slide-session";
+import accountApiRequest from "@/apiRequest/account";
+import { AccountResType } from "@/schemaValidations/account.schema";
+import AppProvider from "@/app/app-provider";
+
 
 
 const inter = Inter({ subsets: ["vietnamese"]});
@@ -22,8 +25,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies()
-  // console.log('RootLayout:', cookieStore.get('sessionToken'))
   const sessionToken = cookieStore.get('sessionToken')?.value || ''
+  let user: AccountResType['payload']['data'] = { name: '', id: 0, email: '' }
+     if(sessionToken) {
+        const data = await accountApiRequest.me(sessionToken)
+        console.log('data', data)
+        user = data.payload.data
+
+     }
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className}`}>
@@ -35,8 +44,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
 
-            <Header />
-            <AppProvider initialSessionToken= {sessionToken}>
+
+            <AppProvider initialSessionToken= {sessionToken} user={user}>
+                <Header user = {user}/>
                 {children}
                 <SlideSession />
             </AppProvider>

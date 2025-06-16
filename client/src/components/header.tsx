@@ -2,27 +2,20 @@ import { ModeToggle } from '@/components/toggle.theme'
 import ButtonLogout from '@/components/ui/button-logout'
 import Link from 'next/link'
 import React from 'react'
-import {cookies} from 'next/headers'
-import accountApiRequest from '@/apiRequest/account'
+import { AccountResType } from '@/schemaValidations/account.schema'
 
-export default async function header() {
-   const cookieStore = cookies()
-   const sessionToken = (await cookieStore).get('sessionToken')?.value ??''
-   let user= null
-   if(sessionToken) {
-      const data = await accountApiRequest.me(sessionToken)
-      console.log('data', data)
-      user = data.payload.data
-
-   }
-   console.log('user', user)
+export default async function header({
+   user
+}:{
+   user: AccountResType['payload']['data'] | null
+}) {
   return (
     <div>
         <ul>
             {user ? (
             <>
                <li>
-                  <div>Welcome, <strong> {user.name}</strong></div>
+                  <Link href={'/me'}>Welcome, <strong> {user.name}</strong></Link>
                </li>
                <li>
                   <ButtonLogout />
