@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button';
 import { cookies } from 'next/headers';
 import Image from 'next/image'
 import Link from 'next/link';
-import { boolean } from 'zod';
-
 
 type Product = {
         name: string;
@@ -54,18 +52,21 @@ export default async function ProductListPage() {
         <div className='space-y-5'>
             {productList.map((product: Product) => (
             <div key={product.id} className='flex space-x-4'>
-                <Image
+              <Link href={`/products/${product.id}`}>
+              <Image
                 src={product.image}
                 alt ={product.name}
                 width={200}
                 height={200}
                 className='w-32 h-32 object-cover'
                 />
+              </Link>
+
                 <h3>{product.name}</h3>
                 <h3>{product.price}</h3>
                 {isAuthenticated &&
                 <div className="flex space-x-2 items-start">
-                  <Link href= {`/products/${product.id}`}>
+                  <Link href= {`/products/${product.id}/edit`}>
                   <Button variant='outline'>Edit</Button>
                   </Link>
 
