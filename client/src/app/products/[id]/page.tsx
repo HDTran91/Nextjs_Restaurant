@@ -4,6 +4,8 @@ import React from 'react'
 import Image from 'next/image'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { cache } from 'react'
+import envConfig from '@/config'
+import { baseOpenGraph } from '@/app/share-metadata'
 
 const getDetail = cache(productApiRequest.getDetail)
 
@@ -20,9 +22,27 @@ export async function generateMetadata(
     // @ts-expect-error
     const {payload} = await getDetail(Number(params.id))
     const product = payload.data
+    const url = envConfig.NEXT_PUBLIC_URL + '/products/' + product.id
 
   return {
-    title: product.name
+    title: product.name,
+    description: product.description,
+    openGraph: {
+        title: product.name,
+        description: product.description,
+        url,
+        siteName: 'Productic Company',
+        images: [
+        {
+            url: product.image
+
+        }
+        ],
+        ...baseOpenGraph,
+    },
+    alternates: {
+        canonical: url,
+    }
   }
 }
 
