@@ -1,17 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import productApiRequest from '@/apiRequest/product'
 import React from 'react'
 import Image from 'next/image'
+import type { Metadata, ResolvingMetadata } from 'next'
+import { cache } from 'react'
 
-export default async function ProductDetail({
-    params
-}:{
-    params: {id:string}
-}) {
+const getDetail = cache(productApiRequest.getDetail)
+
+type Props = {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const {payload} = await getDetail(Number(params.id))
+    const product = payload.data
+
+  return {
+    title: product.name
+  }
+}
+
+
+export default async function ProductDetail({ params, searchParams }: Props) {
    let product = null
    try {
     //eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    const {payload} = await productApiRequest.getDetail(Number(params.id))
+    const {payload} = await getDetail(Number(params.id))
     product = payload.data
     // console.log('product', product)
    }

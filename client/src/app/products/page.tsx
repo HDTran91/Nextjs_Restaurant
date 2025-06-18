@@ -29,6 +29,11 @@ type WrappedProduct = {
     };
 };
 
+export const metadata = {
+  title: 'Product List',
+  description: 'List of products available in the store',
+}
+
 export default async function ProductListPage() {
   const cookieStore = await cookies()
   const sessionToken = cookieStore.get('sessionToken')

@@ -7,7 +7,9 @@ import accountApiRequest from '@/apiRequest/account'
 import { AccountResType } from '@/schemaValidations/account.schema'
 import ProfileForm from '@/app/me/profile-form'
 
-
+export const metadata = {
+  title: 'User Profile'
+}
 
 export default async function MeProfile() {
     const cookieStore = await cookies()
