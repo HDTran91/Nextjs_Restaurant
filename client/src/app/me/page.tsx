@@ -8,7 +8,7 @@ import { AccountResType } from '@/schemaValidations/account.schema'
 import ProfileForm from '@/app/me/profile-form'
 
 export const metadata = {
-  title: 'User Profile'
+  title: 'Profile'
 }
 
 export default async function MeProfile() {
